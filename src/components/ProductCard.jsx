@@ -1,11 +1,11 @@
-const ProductCard = () => {
+const ProductCard = ({ name, price, quantity }) => {
   return (
     <div>
-      <h3>Samsung 25W Charger</h3>
-      <p>$19.99</p>
-      <span>In stock</span>
+      <h3>{name}</h3>
+      <p>${price}</p>
+      <span>{quantity > 0 ? "In stock" : "Out of stock"}</span>
       <p>Available quantity</p>
-      <span>15</span>
+      <span>{quantity}</span>
     </div>
   );
 };
