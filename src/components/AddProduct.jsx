@@ -4,7 +4,7 @@ const AddProduct = ({ onAddProduct }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [errors, setErrors] = useState();
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ const AddProduct = ({ onAddProduct }) => {
     }
 
     if (quantity.trim() === "" || !Number.isInteger(+price) || +quantity < 0) {
-      newErrors.quantity = "Enter a valid non negative price";
+      newErrors.quantity = "Enter a valid non-negative whole number";
     }
 
     setErrors(newErrors);
