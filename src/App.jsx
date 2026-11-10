@@ -13,8 +13,18 @@ const App = () => {
     setProducts((prev) => prev.filter((product) => product.id !== id));
   };
 
+  const updateProduct = (updatedProduct) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product,
+      ),
+    );
+  };
+
   return (
     <div>
+      <AddProduct onAddProduct={addProduct} />
+
       {products?.map((product) => (
         <ProductCard
           key={product.id}
@@ -23,10 +33,9 @@ const App = () => {
           price={product.price}
           quantity={product.quantity}
           onDeleteProduct={deleteProduct}
+          onEditProduct={updateProduct}
         />
       ))}
-
-      <AddProduct onAddProduct={addProduct} />
     </div>
   );
 };
