@@ -1,9 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import AddProduct from "./components/AddProduct";
 
 const App = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch("/api/products");
+        if (!res.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await res.json();
+
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const addProduct = (newProduct) => {
     setProducts((prev) => [...prev, newProduct]);
@@ -25,17 +51,25 @@ const App = () => {
     <div>
       <AddProduct onAddProduct={addProduct} />
 
-      {products?.map((product) => (
-        <ProductCard
-          key={product.id}
-          id={product.id}
-          name={product.name}
-          price={product.price}
-          quantity={product.quantity}
-          onDeleteProduct={deleteProduct}
-          onEditProduct={updateProduct}
-        />
-      ))}
+      {loading ? (
+        <p>Loading Products....</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : products.length === 0 ? (
+        <p>No products available</p>
+      ) : (
+        products?.map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            price={product.price}
+            quantity={product.quantity}
+            onDeleteProduct={deleteProduct}
+            onEditProduct={updateProduct}
+          />
+        ))
+      )}
     </div>
   );
 };
