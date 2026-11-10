@@ -1,15 +1,17 @@
+import { useState } from "react";
 import ProductCard from "./components/ProductCard";
-
-const products = [
-  { id: 1, name: "Samsung Charger", price: 19.99, quantity: 15 },
-  { id: 2, name: "Logitech Mouse", price: 29.99, quantity: 0 },
-  { id: 3, name: "Dell Keyboard", price: 49.99, quantity: 8 },
-];
+import AddProduct from "./components/AddProduct";
 
 const App = () => {
+  const [products, setProducts] = useState([]);
+
+  const addProduct = (newProduct) => {
+    setProducts((prev) => [...prev, newProduct]);
+  };
+
   return (
     <div>
-      {products.map((product) => (
+      {products?.map((product) => (
         <ProductCard
           key={product.id}
           name={product.name}
@@ -17,6 +19,8 @@ const App = () => {
           quantity={product.quantity}
         />
       ))}
+
+      <AddProduct onAddProduct={addProduct} />
     </div>
   );
 };
