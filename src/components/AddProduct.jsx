@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const AddProduct = () => {
+const AddProduct = ({ onAddProduct }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -35,6 +35,8 @@ const AddProduct = () => {
       price: +price,
       quantity: +quantity,
     };
+
+    onAddProduct(newProduct);
 
     setName("");
     setPrice("");

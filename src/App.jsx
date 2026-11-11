@@ -31,8 +31,22 @@ const App = () => {
     fetchProducts();
   }, []);
 
-  const addProduct = (newProduct) => {
-    setProducts((prev) => [...prev, newProduct]);
+  const addProduct = async (newProduct) => {
+    const res = await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to add product");
+    }
+
+    const savedProduct = await res.json();
+
+    setProducts((prev) => [...prev, savedProduct]);
   };
 
   const deleteProduct = (id) => {

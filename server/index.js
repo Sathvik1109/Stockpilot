@@ -38,7 +38,7 @@ app.post("/api/products", (req, res) => {
 
   // 3. Create a new product
   const newProduct = {
-    id: randomUUID,
+    id: randomUUID(),
     name: name.trim(),
     price,
     quantity,
