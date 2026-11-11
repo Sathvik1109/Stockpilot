@@ -6,7 +6,7 @@ const AddProduct = ({ onAddProduct }) => {
   const [quantity, setQuantity] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -36,11 +36,18 @@ const AddProduct = ({ onAddProduct }) => {
       quantity: +quantity,
     };
 
-    onAddProduct(newProduct);
+    try {
+      await onAddProduct(newProduct);
 
-    setName("");
-    setPrice("");
-    setQuantity("");
+      setName("");
+      setPrice("");
+      setQuantity("");
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        submit: error.message,
+      }));
+    }
   };
 
   return (
