@@ -17,6 +17,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/api/products", (req, res) => {
+  res.json(products);
+});
+
 app.post("/api/products", (req, res) => {
   // 1. Extract data from the request
   const { name, price, quantity } = req.body;
@@ -51,8 +55,22 @@ app.post("/api/products", (req, res) => {
   return res.status(200).json(newProduct);
 });
 
-app.get("/api/products", (req, res) => {
-  res.json(products);
+app.delete("/api/products/:id", (req, res) => {
+  const { id } = req.params;
+
+  const productIndex = products.findIndex(
+    (product) => String(product.id) == id,
+  );
+
+  if (productIndex === -1) {
+    return res.status(404).json({
+      message: "Product not found",
+    });
+  }
+
+  products.splice(productIndex, 1);
+
+  return res.status(200).send();
 });
 
 app.listen(3000, () => {
