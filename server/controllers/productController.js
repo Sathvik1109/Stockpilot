@@ -57,8 +57,55 @@ const deleteProduct = (req, res) => {
   return res.status(200).send();
 };
 
+const updateProduct = (req, res) => {
+  // 1. Get product ID from url
+  const { id } = req.params;
+
+  // 2. Get updated data from request body
+  const { name, price, quantity } = req.body ?? {};
+
+  // 3. Find exisiting product
+  const productIndex = products.findIndex(
+    (product) => String(product.id) === id,
+  );
+
+  if (productIndex === -1) {
+    return res.status(404).json({
+      message: "Product not found",
+    });
+  }
+
+  // 4. Validate incoming data
+  if (
+    typeof name !== "string" ||
+    !name.trim() ||
+    typeof price !== "number" ||
+    price < 0 ||
+    !Number.isInteger(quantity) ||
+    quantity < 0
+  ) {
+    return res.status(400).json({
+      message: "Invalid product data",
+    });
+  }
+
+  // 5. Update the product
+  const updateProduct = {
+    id: products[productIndex].id,
+    name: name.trim(),
+    price,
+    quantity,
+  };
+
+  products[productIndex] = updateProduct;
+
+  // 6. Return updated product
+  return res.status(200).json(updateProduct);
+};
+
 module.exports = {
   deleteProduct,
   getProducts,
   addProduct,
+  updateProduct,
 };
