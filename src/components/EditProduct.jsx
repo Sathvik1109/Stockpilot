@@ -6,7 +6,7 @@ const EditProduct = ({ onEditProduct, product, editToggle }) => {
   const [quantity, setQuantity] = useState(product.quantity);
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -40,7 +40,14 @@ const EditProduct = ({ onEditProduct, product, editToggle }) => {
       quantity: +quantity,
     };
 
-    onEditProduct(newProduct);
+    try {
+      await onEditProduct(newProduct);
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        submit: error.message,
+      }));
+    }
 
     setName("");
     setPrice("");
@@ -96,6 +103,7 @@ const EditProduct = ({ onEditProduct, product, editToggle }) => {
         </button>
         <button onClick={() => editToggle((prev) => !prev)}>Cancel</button>
       </form>
+      {errors.submit && <p style={{ color: "red" }}>{errors.submit}</p>}
     </div>
   );
 };

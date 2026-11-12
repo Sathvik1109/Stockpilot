@@ -66,12 +66,28 @@ const App = () => {
     }
   };
 
-  const updateProduct = (updatedProduct) => {
-    setProducts((prev) =>
-      prev.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product,
-      ),
-    );
+  const updateProduct = async (updatedProduct) => {
+    try {
+      const res = await fetch(`/api/products/${updatedProduct.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: updatedProduct.name,
+          price: updatedProduct.price,
+          quantity: updatedProduct.quantity,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update the product");
+      }
+
+      await getProducts();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
