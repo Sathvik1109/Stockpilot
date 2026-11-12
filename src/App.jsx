@@ -7,28 +7,28 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const getProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const res = await fetch("/api/products");
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const data = await res.json();
-
-        setProducts(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      const res = await fetch("/api/products");
+      if (!res.ok) {
+        throw new Error("Failed to fetch products");
       }
-    };
 
-    fetchProducts();
+      const data = await res.json();
+
+      setProducts(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
   }, []);
 
   const addProduct = async (newProduct) => {
@@ -49,8 +49,20 @@ const App = () => {
     setProducts((prev) => [...prev, savedProduct]);
   };
 
-  const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((product) => product.id !== id));
+  const deleteProduct = async (id) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete product");
+      }
+
+      await getProducts();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const updateProduct = (updatedProduct) => {
